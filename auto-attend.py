@@ -17,7 +17,6 @@ class config:
     def __init__(self):
         self.account = ""
         self.password = ""
-        # self.PATH = ""
         self.operateTimeInterval = ""
         
     def get_config(self):
@@ -28,7 +27,6 @@ class config:
             try:
                 self.account = config["config"]["account"]
                 self.password = config["config"]["password"]
-                # self.PATH = config["config"]["PATH"]
                 self.operateTimeInterval = config["config"]["operateTimeInterval"]
             except:
                 print("Configuration file not found, please set it up.")
@@ -38,11 +36,9 @@ class config:
                     pass
                 self.account = input("Account:")
                 self.password = input("Password:")
-                # self.PATH = input("Complete Path of ChromeDriver:")
                 self.operateTimeInterval = input("Operate Time Interval(default=0.5):")
                 config.set("config", "account", self.account)
                 config.set("config", "password", self.password)
-                # config.set("config", "PATH", self.PATH)
                 config.set("config", "operateTimeInterval", self.operateTimeInterval)
                 config.write(f)
     
@@ -56,17 +52,17 @@ def connent_to_attendence():
         driver = webdriver.Chrome(service = cService)
     return driver
 
+
 def login(account, password):
     driver.find_element(By.NAME, "Account").send_keys(account)
     driver.find_element(By.NAME, "Password").send_keys(password)
     driver.find_element(By.NAME, "Password").send_keys(Keys.RETURN)
 
 def get_main_elements():
-    main1 = driver.find_element(By.ID, "main1")
     main2 = driver.find_element(By.ID, "main2")
     main3 = driver.find_element(By.ID, "main3")
-    main4 = driver.find_element(By.ID, "main4")
-    return main1, main2, main3, main4
+    return main2, main3
+
 
 def get_data(elements, elements_branch_class_name, rows_number=8):
     data=[]
@@ -74,6 +70,7 @@ def get_data(elements, elements_branch_class_name, rows_number=8):
         for a in element.find_elements(By.CLASS_NAME, elements_branch_class_name):
             data.append(a.text)
     return np.array(data, dtype=str).reshape(int(len(data)/rows_number), rows_number)
+
 
 def check_for_attendance(date_today, date_check, attendance_date):
     #True  -> need attendance
@@ -86,19 +83,19 @@ def check_for_attendance(date_today, date_check, attendance_date):
         return False
     return True
     
+
 class laber_select_time:
     def __init__(self, timePicker):
         self.timePicker = main3.find_element(By.ID, timePicker)
 
+
     def set_time(self, day, time):
         self.timePicker.click()
-        sleep(0.2)
         driver.find_element(By.ID, "ui-datepicker-div").find_element(By.XPATH, "//a[contains(text(),"+ str(day) +")]").click()
         self.slider = driver.find_element(By.ID, "ui-datepicker-div").find_element(By.CLASS_NAME, "ui_tpicker_hour_slider")
         move = ActionChains(driver)
         move.click_and_hold(self.slider).move_by_offset(time, 0).release().perform()
         driver.find_element(By.ID, "ui-datepicker-div").find_element(By.CLASS_NAME, "ui-datepicker-close").click()
-
 
 
 def attendance(project):
@@ -121,7 +118,6 @@ def attendance(project):
                 morning = True
                 time_unit = 0
                 
-
                 select = Select(main3.find_element(By.NAME, "workP"))
                 for op in select.options:
                     if op.text == "":
@@ -134,13 +130,9 @@ def attendance(project):
                 if days//7*40 - ((days-5) % 7 * 8 if (days)%7==(0 or 6) else 0) + (days-days//7*7)*8 < int(project[5]):
                     print("fail : do not have enough time unit, need " + project[5] + " but " + str(days//7*40 - ((days-5) % 7 * 8 if (days)%7==(0 or 6) else 0) + (days-days//7*7)*8))
                     break
-                
                 for i in range((int(project[5])+3)//4):
                     select = Select(main3.find_element(By.NAME, "workP"))
                     select.select_by_visible_text(op_text)
-                    
-                      #8.->-20   12.->4   13.->9   17->33
-                    
                     date_picker_start_time = laber_select_time("datetimepicker1")
                     date_picker_end_time = laber_select_time("datetimepicker2")
                     if int(project[5]) - time_unit >= 4:
@@ -177,8 +169,7 @@ def attendance(project):
                         break
                     sleep(operateTimeInterval)
                 main2.find_element(By.ID, "node_level-1-2").click()
-                sleep(operateTimeInterval)
-                                    
+                sleep(operateTimeInterval)               
                 for a in main3.find_elements(By.XPATH, "//div[@title='" + project[0] + "']/../.."):
                     a.find_element(By.CLASS_NAME, "w2ui-grid-select-check").click()
                 main3.find_element(By.ID, "btnSubmit").click()
@@ -206,9 +197,7 @@ def attendance(project):
                     select.select_by_visible_text(op.text)
                     sleep(0.2)
                     check_box_list = get_data(main3.find_elements(By.CLASS_NAME, "w2ui-odd") + main3.find_elements(By.CLASS_NAME, "w2ui-even"), "w2ui-grid-data", 4)
-
                     main3.find_element(By.ID, "ShowWorkDetail").find_element(By.XPATH, "//div[@title=" + str(check_box_list[(np.where(check_box_list[:,1]==str(date))),1][0,0]) + "]/../..").find_element(By.TAG_NAME, "input").click
-
                     main3.find_element(By.CSS_SELECTOR, "input[type='button']").click()
                     sleep(operateTimeInterval)
                     WebDriverWait(driver, 10).until(EC.alert_is_present())
@@ -217,16 +206,18 @@ def attendance(project):
 
 
 
+
+
+
 if __name__ == '__main__':
     
     config = config()
     config.get_config()
-    
-
     operateTimeInterval = float(config.operateTimeInterval)
     
     
     driver = connent_to_attendence()
+    
     
     driver.get("https://pt-attendance.nctu.edu.tw/verify/userLogin.php")
     login(config.account, config.password)
@@ -241,7 +232,8 @@ if __name__ == '__main__':
     sleep(operateTimeInterval)
     
     
-    main1, main2, main3, main4 = get_main_elements()
+    main2, main3 = get_main_elements()
+
 
     driver.find_element(By.ID, "node_level-2-2").click() #獎助型申請紀錄
     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "w2ui-grid-data")))
@@ -259,10 +251,12 @@ if __name__ == '__main__':
     
     today = str(datetime.date.today()).replace("-","")
     
+    
     for project in all_projects:
         attendance(project)
     
     
     print("attend done.")
+
 
     driver.close()
