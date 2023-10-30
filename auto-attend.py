@@ -111,7 +111,7 @@ def attendance(project):
             if check_for_attendance(today, date, labor_history[a,2]):
                 main2.find_element(By.ID, "node_level-1-1").click()
                 print("try to attend  " + project[0] + "    " + str(date) + "...")
-                sleep(0.2)
+                sleep(operateTimeInterval)
                 
                 day = start_date % 100
                 weekly_work_day = 1
@@ -187,7 +187,7 @@ def attendance(project):
             if check_for_attendance(today, date, scholarship_history[a,3]):
                 main2.find_element(By.ID, "node_level-2-1").click()
                 print("try to attend  " + project[0] +"    " + str(date) + "...")
-                sleep(0.2)
+                sleep(operateTimeInterval)
                 select = Select(main3.find_element(By.NAME, "workP"))
                 for op in select.options:
                     if op.text == "":
@@ -195,11 +195,10 @@ def attendance(project):
                     if ((int(op.text.split(" ")[1].split("-")[0])-date) * (int(op.text.split(" ")[1].split("-")[1])-date)) > 0 or (op.text.split(":")[0] != project[0]):
                         continue
                     select.select_by_visible_text(op.text)
-                    sleep(0.2)
+                    WebDriverWait(main3, 10).until(EC.presence_of_element_located((By.TAG_NAME, "label")))
                     check_box_list = get_data(main3.find_elements(By.CLASS_NAME, "w2ui-odd") + main3.find_elements(By.CLASS_NAME, "w2ui-even"), "w2ui-grid-data", 4)
                     main3.find_element(By.ID, "ShowWorkDetail").find_element(By.XPATH, "//div[@title=" + str(check_box_list[(np.where(check_box_list[:,1]==str(date))),1][0,0]) + "]/../..").find_element(By.TAG_NAME, "input").click
                     main3.find_element(By.CSS_SELECTOR, "input[type='button']").click()
-                    sleep(operateTimeInterval)
                     WebDriverWait(driver, 10).until(EC.alert_is_present())
                     driver.switch_to.alert.accept()
                     print("successfully attend   " + project[0] + "    " + str(date))
