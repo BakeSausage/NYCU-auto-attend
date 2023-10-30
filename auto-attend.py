@@ -97,7 +97,6 @@ class laber_select_time:
         self.slider = driver.find_element(By.ID, "ui-datepicker-div").find_element(By.CLASS_NAME, "ui_tpicker_hour_slider")
         move = ActionChains(driver)
         move.click_and_hold(self.slider).move_by_offset(time, 0).release().perform()
-        sleep(0.2)
         driver.find_element(By.ID, "ui-datepicker-div").find_element(By.CLASS_NAME, "ui-datepicker-close").click()
 
 
@@ -183,7 +182,9 @@ def attendance(project):
                 for a in main3.find_elements(By.XPATH, "//div[@title='" + project[0] + "']/../.."):
                     a.find_element(By.CLASS_NAME, "w2ui-grid-select-check").click()
                 main3.find_element(By.ID, "btnSubmit").click()
-                print("attend  " + project[0] + "    " + str(date) + "success")
+                WebDriverWait(driver, 10).until(EC.alert_is_present())
+                driver.switch_to.alert.accept()
+                print("successfully attend   " + project[0] + "    " + str(date))
                 
                 
     elif project[2]=="獎助型":
@@ -209,7 +210,10 @@ def attendance(project):
                     main3.find_element(By.ID, "ShowWorkDetail").find_element(By.XPATH, "//div[@title=" + str(check_box_list[(np.where(check_box_list[:,1]==str(date))),1][0,0]) + "]/../..").find_element(By.TAG_NAME, "input").click
 
                     main3.find_element(By.CSS_SELECTOR, "input[type='button']").click()
-                    print("attend  " + project[0] + "    " + str(date) + "success")
+                    sleep(operateTimeInterval)
+                    WebDriverWait(driver, 10).until(EC.alert_is_present())
+                    driver.switch_to.alert.accept()
+                    print("successfully attend   " + project[0] + "    " + str(date))
 
 
 
