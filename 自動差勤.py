@@ -39,7 +39,7 @@ class config:
                 self.account = input("Account:")
                 self.password = input("Password:")
                 # self.PATH = input("Complete Path of ChromeDriver:")
-                self.operateTimeInterval = input("Operate Time Interval(default=0.5s):")
+                self.operateTimeInterval = input("Operate Time Interval(default=0.5):")
                 config.set("config", "account", self.account)
                 config.set("config", "password", self.password)
                 # config.set("config", "PATH", self.PATH)
