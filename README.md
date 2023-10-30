@@ -10,6 +10,6 @@ numpy
 
 selenium
 
-#使用教學
+# 使用教學
 
 將run.bat內容路徑改為auto-attend.py所在路徑
