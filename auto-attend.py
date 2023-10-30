@@ -5,12 +5,15 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver import ActionChains
 import numpy as np
 from time import sleep
 import datetime
 import os
 import configparser
+
+
 
 
 class config:
@@ -45,11 +48,13 @@ class config:
 
 
 def connent_to_attendence():
+    options = Options()
+    options.add_experimental_option('excludeSwitches', ['enable-logging'])
     try:
-        driver = webdriver.Chrome()
+        driver = webdriver.Chrome(options=options)
     except:
         cService = webdriver.ChromeService()
-        driver = webdriver.Chrome(service = cService)
+        driver = webdriver.Chrome(service = cService, options=options)
     return driver
 
 
