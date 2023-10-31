@@ -11,10 +11,6 @@ from time import sleep
 import datetime
 import os
 import configparser
-import warnings
-
-
-
 
 class config:
     def __init__(self):
