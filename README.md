@@ -11,9 +11,8 @@ pip install numpy
 pip install selenium
 
 # 使用教學
-雙擊run.bat即可享受自動差勤的快感
 
--------------------------------
+雙擊run.bat即可享受自動差勤的快感
 
 首次使用會要求帳號密碼和操作間格
 
