@@ -99,9 +99,9 @@ def check_for_attendance2(date_today, date_check, attendance_date, attendance_re
     #False -> already attended
     date_today = int(date_today)
     date_check = int(date_check)
-    if attendance_reg[np.where(attendance_date==str(date_check))] != "未登錄":
-        return False
     if date_today//100 < date_check:
+        return False
+    if attendance_reg[np.where(attendance_date==str(date_check))] != "未登錄":
         return False
     return True
     
@@ -181,7 +181,7 @@ def attendance(project):
                     break
                 days = (int(today)-int(op.text.split(" ")[1].split("~")[0].replace("-",""))+1) #default caculation only by date(dd), didnt consider project over 1 month
                 if days//7*40 - ((days-5) % 7 * 8 if (days)%7==(0 or 6) else 0) + (days-days//7*7)*8 < int(project[5]):
-                    print("fail : do not have enough time unit, need " + project[5] + " but " + str(days//7*40 - ((days-5) % 7 * 8 if (days)%7==(0 or 6) else 0) + (days-days//7*7)*8))
+                    print("fail : do not have enough time unit, need " + project[5] + " but " + str(days//7*40 - ((days-5) % 7 * 8 if (days)%7==(0 or 6) else 0) + (days-days//7*7)*8) + "\n")
                     break
                 while time_unit < int(project[5]):
                     select = Select(main3.find_element(By.NAME, "workP"))
@@ -276,7 +276,7 @@ def attendance(project):
 
 
 if __name__ == '__main__':
-    warnings.filterwarnings(action='ignore', category=DeprecationWarning)
+    # warnings.filterwarnings(action='ignore', category=DeprecationWarning)
     
     config = config()
     config.get_config()
