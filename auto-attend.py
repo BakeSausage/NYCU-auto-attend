@@ -11,6 +11,7 @@ from time import sleep
 import datetime
 import os
 import configparser
+import warnings
 
 
 
@@ -88,6 +89,17 @@ def check_for_attendance(date_today, date_check, attendance_date):
     date_today = int(date_today)
     date_check = int(date_check)
     if str(date_check) in attendance_date:
+        return False
+    if date_today//100 < date_check:
+        return False
+    return True
+
+def check_for_attendance2(date_today, date_check, attendance_date, attendance_reg):
+    #True  -> need attendance
+    #False -> already attended
+    date_today = int(date_today)
+    date_check = int(date_check)
+    if attendance_reg[np.where(attendance_date==str(date_check))] != "未登錄":
         return False
     if date_today//100 < date_check:
         return False
@@ -227,11 +239,18 @@ def attendance(project):
                 
     elif project[2]=="獎助型":
         a = np.where(scholarship_history[:,4] == project[0])
+        
+        
+        
+        
+        
         start_month = str(int(project[6].replace("-",""))//100)
         end_month = str(int(project[7].replace("-",""))//100)
         for i in range( 12*(int(end_month[0:4])-int(start_month[0:4])) + (int(end_month[4:6])-int(start_month[4:6])) + 1):
             date = int(start_month) + (int(start_month[4:6])+i-1)//12*88 + i
-            if check_for_attendance(today, date, scholarship_history[a,3]):
+            
+            if check_for_attendance2(today, date, scholarship_history[a,3], scholarship_history[a,6]):
+                
                 main2.find_element(By.ID, "node_level-2-1").click()
                 print("try to attend  " + project[0] +"    " + str(date) + "...")
                 sleep(operateTimeInterval)
@@ -244,11 +263,11 @@ def attendance(project):
                     break
                 select.select_by_visible_text(op.text)
                 WebDriverWait(main3, 10).until(EC.presence_of_element_located((By.TAG_NAME, "label")))
+                sleep(operateTimeInterval)
                 check_box_list = get_data(main3.find_elements(By.CLASS_NAME, "w2ui-odd") + main3.find_elements(By.CLASS_NAME, "w2ui-even"), "w2ui-grid-data", 4)
-                main3.find_element(By.ID, "ShowWorkDetail").find_element(By.XPATH, "//div[@title=" + str(check_box_list[(np.where(check_box_list[:,1]==str(date))),1][0,0]) + "]/../..").find_element(By.TAG_NAME, "input").click()
+                main3.find_element(By.ID, "ShowWorkDetail").find_element(By.XPATH, "//div[@title=" + str(date) + "]/../..").find_element(By.TAG_NAME, "input").click()
                 main3.find_element(By.CSS_SELECTOR, "input[type='button']").click()
-                WebDriverWait(driver, 10).until(EC.alert_is_present())
-                driver.switch_to.alert.accept()
+                sleep(operateTimeInterval)
                 print("successfully attend   " + project[0] + "    " + str(date))
 
 
@@ -257,6 +276,7 @@ def attendance(project):
 
 
 if __name__ == '__main__':
+    warnings.filterwarnings(action='ignore', category=DeprecationWarning)
     
     config = config()
     config.get_config()
