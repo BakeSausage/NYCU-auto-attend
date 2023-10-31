@@ -6,9 +6,9 @@ beta測試中...
 
 # 安裝需求
 
-pip install numpy
+numpy
 
-pip install selenium
+selenium
 
 # 使用教學
 
