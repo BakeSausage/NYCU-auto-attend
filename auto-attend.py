@@ -270,4 +270,3 @@ if __name__ == '__main__':
 
     driver.close()
     
-    input("Press enter to continue ...")
