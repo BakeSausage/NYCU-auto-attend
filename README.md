@@ -12,4 +12,4 @@ selenium
 
 # 使用教學
 
-將run.bat內容路徑改為auto-attend.py所在路徑
+右鍵run.bat，點擊編輯，將cd後的路徑改為auto-attend.py所在路徑
