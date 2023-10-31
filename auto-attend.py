@@ -184,24 +184,24 @@ def attendance(project):
                 
                     if int(project[5]) - time_unit >= 4: # &schedule in none
                         if morning:
-                            start_time = -60
-                            end_time = -36
+                            start_time = -20
+                            end_time = 4
                             date_picker_start_time.set_time(start_month, day, start_time)
                             date_picker_end_time.set_time(start_month, day, end_time)
                         else:
-                            start_time = 45
-                            end_time = 69
+                            start_time = 9
+                            end_time = 33
                             date_picker_start_time.set_time(start_month, day, start_time)
                             date_picker_end_time.set_time(start_month, day, end_time)
                     else:
                         if morning:
-                            start_time = -60
-                            end_time = -60 + 6* (int(project[5]) - time_unit)
+                            start_time = -20
+                            end_time = -20 + 6* (int(project[5]) - time_unit)
                             date_picker_start_time.set_time(start_month, day, start_time)
                             date_picker_end_time.set_time(start_month, day, end_time)
                         else:
-                            start_time = 45
-                            end_time = 45 + 6 * (int(project[5]) - time_unit)
+                            start_time = 9
+                            end_time = 9 + 6 * (int(project[5]) - time_unit)
                             date_picker_start_time.set_time(start_month, day, start_time)
                             date_picker_end_time.set_time(start_month, day, end_time)
                     main3.find_element(By.ID, "btnSubmit").click()
