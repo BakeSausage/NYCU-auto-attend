@@ -50,10 +50,10 @@ def connent_to_attendence():
     options = Options()
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
     try:
-        driver = webdriver.Chrome()
+        driver = webdriver.Chrome(options=options)
     except:
         try:
-            driver = webdriver.Chrome(options=options)
+            driver = webdriver.Chrome()
         except:
             try:
                 cService = webdriver.ChromeService()
