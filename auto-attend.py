@@ -93,19 +93,50 @@ def check_for_attendance(date_today, date_check, attendance_date):
         return False
     return True
     
+def month_to_number(o):
+    M=["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]
+    m=["01","02","03","04","05","06","07","08","09","10","11","12"]
+    return m[M.index(o)]
+
 
 class laber_select_time:
     def __init__(self, timePicker):
         self.timePicker = main3.find_element(By.ID, timePicker)
+        self.main_ui = driver.find_element(By.CLASS_NAME, "ui-datepicker")
 
 
-    def set_time(self, day, time):
+    def set_time(self, year_month, day, time):
         self.timePicker.click()
+        year = self.main_ui.find_element(By.CLASS_NAME, "ui-datepicker-year").text
+        month = self.main_ui.find_element(By.CLASS_NAME, "ui-datepicker-month").text
+        while int(year + month_to_number(month)) != year_month:
+            year = self.main_ui.find_element(By.CLASS_NAME, "ui-datepicker-year").text
+            month = self.main_ui.find_element(By.CLASS_NAME, "ui-datepicker-month").text
+            if int(year + month_to_number(month)) > year_month:
+                self.main_ui.find_element(By.CLASS_NAME, "ui-datepicker-prev").click()
+            elif int(year + month_to_number(month)) < year_month:
+                self.main_ui.find_element(By.CLASS_NAME, "ui-datepicker-next").click()
+                
         driver.find_element(By.ID, "ui-datepicker-div").find_element(By.XPATH, "//a[contains(text(),"+ str(day) +")]").click()
         self.slider = driver.find_element(By.ID, "ui-datepicker-div").find_element(By.CLASS_NAME, "ui_tpicker_hour_slider")
         move = ActionChains(driver)
         move.click_and_hold(self.slider).move_by_offset(time, 0).release().perform()
         driver.find_element(By.ID, "ui-datepicker-div").find_element(By.CLASS_NAME, "ui-datepicker-close").click()
+
+class schedule:
+    def __init__(self):
+        s = configparser.ConfigParser()
+        with open(".\schedule.ini", "a+") as f:
+            s.read("schedule.ini")
+            self.schedule = s
+    
+    
+    def has_class(self, date, morning):
+        weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        if self.schedule[weekdays[int(datetime.datetime.strptime(date, "%Y%m%d").weekday())]]["morning" if morning else "afternoon"] == "1":
+            return True
+        else:
+            return False
 
 
 def attendance(project):
@@ -136,48 +167,54 @@ def attendance(project):
                         continue
                     op_text = op.text
                     break
-                days = (int(today)-int(op.text.split(" ")[1].split("~")[0].replace("-",""))+1) #default caculation only by date(dd), maybe it was wrong
+                days = (int(today)-int(op.text.split(" ")[1].split("~")[0].replace("-",""))+1) #default caculation only by date(dd), didnt consider project over 1 month
                 if days//7*40 - ((days-5) % 7 * 8 if (days)%7==(0 or 6) else 0) + (days-days//7*7)*8 < int(project[5]):
                     print("fail : do not have enough time unit, need " + project[5] + " but " + str(days//7*40 - ((days-5) % 7 * 8 if (days)%7==(0 or 6) else 0) + (days-days//7*7)*8))
                     break
-                for i in range((int(project[5])+3)//4):
+                while time_unit < int(project[5]):
                     select = Select(main3.find_element(By.NAME, "workP"))
                     select.select_by_visible_text(op_text)
                     date_picker_start_time = laber_select_time("datetimepicker1")
                     date_picker_end_time = laber_select_time("datetimepicker2")
-                    if int(project[5]) - time_unit >= 4:
+                    
+                    if schedule.has_class(str(date)+str(day), morning) == True:
+                        day = day + 1 if not(morning) else day
+                        morning = not morning
+                        continue
+                
+                    if int(project[5]) - time_unit >= 4: # &schedule in none
                         if morning:
                             start_time = -60
                             end_time = -36
-                            date_picker_start_time.set_time(day, start_time)
-                            date_picker_end_time.set_time(day, end_time)
+                            date_picker_start_time.set_time(start_month, day, start_time)
+                            date_picker_end_time.set_time(start_month, day, end_time)
                         else:
                             start_time = 45
                             end_time = 69
-                            date_picker_start_time.set_time(day, start_time)
-                            date_picker_end_time.set_time(day, end_time)
+                            date_picker_start_time.set_time(start_month, day, start_time)
+                            date_picker_end_time.set_time(start_month, day, end_time)
                     else:
                         if morning:
                             start_time = -60
                             end_time = -60 + 6* (int(project[5]) - time_unit)
-                            date_picker_start_time.set_time(day, start_time)
-                            date_picker_end_time.set_time(day, end_time)
+                            date_picker_start_time.set_time(start_month, day, start_time)
+                            date_picker_end_time.set_time(start_month, day, end_time)
                         else:
                             start_time = 45
                             end_time = 45 + 6 * (int(project[5]) - time_unit)
-                            date_picker_start_time.set_time(day, start_time)
-                            date_picker_end_time.set_time(day, end_time)
+                            date_picker_start_time.set_time(start_month, day, start_time)
+                            date_picker_end_time.set_time(start_month, day, end_time)
                     main3.find_element(By.ID, "btnSubmit").click()
+                    
                     day = day + 1 if not(morning) else day
                     weekly_work_day = weekly_work_day + 1 if not(morning) else weekly_work_day
                     if weekly_work_day > 5:
                         weekly_work_day = 1
                         day = day + 2
-                    time_unit = time_unit + 4
                     morning = not morning
-                    if time_unit >= int(project[5]):
-                        break
+                    time_unit = time_unit + 4
                     sleep(operateTimeInterval)
+                    
                 main2.find_element(By.ID, "node_level-1-2").click()
                 sleep(operateTimeInterval)               
                 for a in main3.find_elements(By.XPATH, "//div[@title='" + project[0] + "']/../.."):
@@ -260,7 +297,7 @@ if __name__ == '__main__':
     ########################################################################
     
     today = str(datetime.date.today()).replace("-","")
-    
+
     
     for project in all_projects:
         attendance(project)
