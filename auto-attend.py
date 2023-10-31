@@ -50,10 +50,10 @@ def connent_to_attendence():
     options = Options()
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
     try:
-        driver = webdriver.Chrome(options=options)
+        driver = webdriver.Chrome()
     except:
         try:
-            driver = webdriver.Chrome()
+            driver = webdriver.Chrome(options=options)
         except:
             try:
                 cService = webdriver.ChromeService()
@@ -204,14 +204,15 @@ def attendance(project):
                         continue
                     if ((int(op.text.split(" ")[1].split("-")[0])-date) * (int(op.text.split(" ")[1].split("-")[1])-date)) > 0 or (op.text.split(":")[0] != project[0]):
                         continue
-                    select.select_by_visible_text(op.text)
-                    WebDriverWait(main3, 10).until(EC.presence_of_element_located((By.TAG_NAME, "label")))
-                    check_box_list = get_data(main3.find_elements(By.CLASS_NAME, "w2ui-odd") + main3.find_elements(By.CLASS_NAME, "w2ui-even"), "w2ui-grid-data", 4)
-                    main3.find_element(By.ID, "ShowWorkDetail").find_element(By.XPATH, "//div[@title=" + str(check_box_list[(np.where(check_box_list[:,1]==str(date))),1][0,0]) + "]/../..").find_element(By.TAG_NAME, "input").click
-                    main3.find_element(By.CSS_SELECTOR, "input[type='button']").click()
-                    WebDriverWait(driver, 10).until(EC.alert_is_present())
-                    driver.switch_to.alert.accept()
-                    print("successfully attend   " + project[0] + "    " + str(date))
+                    break
+                select.select_by_visible_text(op.text)
+                WebDriverWait(main3, 10).until(EC.presence_of_element_located((By.TAG_NAME, "label")))
+                check_box_list = get_data(main3.find_elements(By.CLASS_NAME, "w2ui-odd") + main3.find_elements(By.CLASS_NAME, "w2ui-even"), "w2ui-grid-data", 4)
+                main3.find_element(By.ID, "ShowWorkDetail").find_element(By.XPATH, "//div[@title=" + str(check_box_list[(np.where(check_box_list[:,1]==str(date))),1][0,0]) + "]/../..").find_element(By.TAG_NAME, "input").click()
+                main3.find_element(By.CSS_SELECTOR, "input[type='button']").click()
+                WebDriverWait(driver, 10).until(EC.alert_is_present())
+                driver.switch_to.alert.accept()
+                print("successfully attend   " + project[0] + "    " + str(date))
 
 
 
