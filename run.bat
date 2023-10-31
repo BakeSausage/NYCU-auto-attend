@@ -1,2 +1,3 @@
-cd C:\Users\che\Desktop\自動差勤
+cd C:\Users\
 python auto-attend.py
+pause
