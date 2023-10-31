@@ -234,7 +234,7 @@ def attendance(project):
                 main3.find_element(By.ID, "btnSubmit").click()
                 WebDriverWait(driver, 10).until(EC.alert_is_present())
                 driver.switch_to.alert.accept()
-                print("successfully attend   " + project[0] + "    " + str(date))
+                print("successfully attend   " + project[0] + "    " + str(date)+"\n")
                 
                 
     elif project[2]=="獎助型":
@@ -268,7 +268,7 @@ def attendance(project):
                 main3.find_element(By.ID, "ShowWorkDetail").find_element(By.XPATH, "//div[@title=" + str(date) + "]/../..").find_element(By.TAG_NAME, "input").click()
                 main3.find_element(By.CSS_SELECTOR, "input[type='button']").click()
                 sleep(operateTimeInterval)
-                print("successfully attend   " + project[0] + "    " + str(date))
+                print("successfully attend   " + project[0] + "    " + str(date)+"\n")
 
 
 
