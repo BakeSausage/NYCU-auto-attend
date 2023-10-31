@@ -1,3 +1,3 @@
-cd C:\Users\
+cd %~dp0
 python auto-attend.py
 pause
