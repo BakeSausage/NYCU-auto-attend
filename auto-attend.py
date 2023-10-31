@@ -182,7 +182,7 @@ def attendance(project):
                         morning = not morning
                         continue
                 
-                    if int(project[5]) - time_unit >= 4: # &schedule in none
+                    if int(project[5]) - time_unit >= 4:
                         if morning:
                             start_time = -20
                             end_time = 4
@@ -282,13 +282,13 @@ if __name__ == '__main__':
     main2, main3 = get_main_elements()
 
 
-    driver.find_element(By.ID, "node_level-2-2").click() #獎助型申請紀錄
+    driver.find_element(By.ID, "node_level-2-2").click()
     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "w2ui-grid-data")))
     sleep(operateTimeInterval)
     scholarship_history = get_data((main3.find_elements(By.CLASS_NAME, "w2ui-odd") + main3.find_elements(By.CLASS_NAME, "w2ui-even")), "w2ui-grid-data")
     
     
-    driver.find_element(By.ID, "node_level-1-4").click() #勞動型申請紀錄
+    driver.find_element(By.ID, "node_level-1-4").click()
     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "w2ui-grid-data")))
     sleep(operateTimeInterval)
     labor_history = get_data(main3.find_elements(By.CLASS_NAME, "w2ui-odd") + main3.find_elements(By.CLASS_NAME, "w2ui-even"), "w2ui-grid-data")
@@ -297,7 +297,9 @@ if __name__ == '__main__':
     ########################################################################
     
     today = str(datetime.date.today()).replace("-","")
-
+    
+    
+    schedule = schedule()
     
     for project in all_projects:
         attendance(project)
