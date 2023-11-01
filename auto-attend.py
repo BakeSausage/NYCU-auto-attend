@@ -35,7 +35,7 @@ class config:
                     pass
                 self.account = input("Account:")
                 self.password = input("Password:")
-                self.operateTimeInterval = input("Operate Time Interval(default=0.5):")
+                self.operateTimeInterval = "0.5"
                 config.set("config", "account", self.account)
                 config.set("config", "password", self.password)
                 config.set("config", "operateTimeInterval", self.operateTimeInterval)
