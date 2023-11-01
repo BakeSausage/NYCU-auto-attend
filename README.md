@@ -15,9 +15,7 @@ selenium
 
 雙擊run即可享受自動差勤的快感
 
-首次使用會要求帳號密碼
-
-操作間隔Operate time interval 為每次操作網頁時的間隔，輸入約0.5即可
+首次使用會要求帳號密碼，並且將帳密儲存為config.ini並儲存與本機中，沒有外流問題。
 
 開啟schedule.ini，將有課的時段改為1
 
