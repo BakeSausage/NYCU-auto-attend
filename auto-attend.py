@@ -46,15 +46,20 @@ class config:
 def connent_to_attendence():
     options = Options()
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
+    if os.name == "nt":
+        path = "./chromedriver/win/chromedriver.exe"
+    elif os.name == "posix":
+        path = "./chromedriver/mac/chromedriver"
+    
     try:
-        cService = webdriver.ChromeService()
+        cService = webdriver.ChromeService(path)
         driver = webdriver.Chrome(service = cService, options=options)
     except:
         try:
-            driver = webdriver.Chrome(options=options)
+            driver = webdriver.Chrome(path, options=options)
         except:
             try:
-                driver = webdriver.Chrome()
+                driver = webdriver.Chrome(path)
             except:
                 pass
     return driver
