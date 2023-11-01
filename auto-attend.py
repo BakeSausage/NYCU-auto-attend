@@ -276,8 +276,7 @@ def attendance(project):
 
 
 if __name__ == '__main__':
-    # warnings.filterwarnings(action='ignore', category=DeprecationWarning)
-    
+
     config = config()
     config.get_config()
     operateTimeInterval = float(config.operateTimeInterval)
@@ -307,12 +306,13 @@ if __name__ == '__main__':
     sleep(operateTimeInterval)
     scholarship_history = get_data((main3.find_elements(By.CLASS_NAME, "w2ui-odd") + main3.find_elements(By.CLASS_NAME, "w2ui-even")), "w2ui-grid-data")
     
-    
-    driver.find_element(By.ID, "node_level-1-4").click()
-    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "w2ui-grid-data")))
-    sleep(operateTimeInterval)
-    labor_history = get_data(main3.find_elements(By.CLASS_NAME, "w2ui-odd") + main3.find_elements(By.CLASS_NAME, "w2ui-even"), "w2ui-grid-data")
-    
+    try:
+        driver.find_element(By.ID, "node_level-1-4").click()
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "w2ui-grid-data")))
+        sleep(operateTimeInterval)
+        labor_history = get_data(main3.find_elements(By.CLASS_NAME, "w2ui-odd") + main3.find_elements(By.CLASS_NAME, "w2ui-even"), "w2ui-grid-data")
+    except:
+        pass
     
     ########################################################################
     
@@ -320,6 +320,7 @@ if __name__ == '__main__':
     
     
     schedule = schedule()
+    
     
     for project in all_projects:
         attendance(project)
