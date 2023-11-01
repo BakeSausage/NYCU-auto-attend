@@ -13,9 +13,9 @@ selenium
 
 # 使用教學
 
-雙擊run.bat即可享受自動差勤的快感
+雙擊run即可享受自動差勤的快感(.bat for window, .sh for mac)
 
-首次使用會要求帳號密碼和操作間格
+首次使用會要求帳號密碼
 
 操作間隔Operate time interval 為每次操作網頁時的間隔，輸入約0.5即可
 
