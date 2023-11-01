@@ -12,6 +12,9 @@ import datetime
 import os
 import configparser
 
+
+
+
 class config:
     def __init__(self):
         self.account = ""
@@ -26,7 +29,6 @@ class config:
             try:
                 self.account = config["config"]["account"]
                 self.password = config["config"]["password"]
-                self.operateTimeInterval = config["config"]["operateTimeInterval"]
             except:
                 print("Configuration file not found, please set it up.")
                 try:
@@ -35,7 +37,7 @@ class config:
                     pass
                 self.account = input("Account:")
                 self.password = input("Password:")
-                self.operateTimeInterval = input("Operate Time Interval(default=0.5):")
+                self.operateTimeInterval = 0.5
                 config.set("config", "account", self.account)
                 config.set("config", "password", self.password)
                 config.set("config", "operateTimeInterval", self.operateTimeInterval)
@@ -46,15 +48,22 @@ class config:
 def connent_to_attendence():
     options = Options()
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
+    system = os.name
+    if system == "nt":
+        path = "./chromedriver/win/chromedriver.exe"
+        system = "win"
+    elif system =="posix":
+        system = "./chromedriver/mac/chromedriver"
+        
     try:
-        cService = webdriver.ChromeService()
+        cService = webdriver.ChromeService(path)
         driver = webdriver.Chrome(service = cService, options=options)
     except:
         try:
-            driver = webdriver.Chrome(options=options)
+            driver = webdriver.Chrome(path, options=options)
         except:
             try:
-                driver = webdriver.Chrome()
+                driver = webdriver.Chrome(path)
             except:
                 pass
     return driver
@@ -87,17 +96,6 @@ def check_for_attendance(date_today, date_check, attendance_date):
     if str(date_check) in attendance_date:
         return False
     if date_today//100 < date_check:
-        return False
-    return True
-
-def check_for_attendance2(date_today, date_check, attendance_date, attendance_reg):
-    #True  -> need attendance
-    #False -> already attended
-    date_today = int(date_today)
-    date_check = int(date_check)
-    if date_today//100 < date_check:
-        return False
-    if attendance_reg[np.where(attendance_date==str(date_check))] != "未登錄":
         return False
     return True
     
@@ -177,7 +175,7 @@ def attendance(project):
                     break
                 days = (int(today)-int(op.text.split(" ")[1].split("~")[0].replace("-",""))+1) #default caculation only by date(dd), didnt consider project over 1 month
                 if days//7*40 - ((days-5) % 7 * 8 if (days)%7==(0 or 6) else 0) + (days-days//7*7)*8 < int(project[5]):
-                    print("fail : do not have enough time unit, need " + project[5] + " but " + str(days//7*40 - ((days-5) % 7 * 8 if (days)%7==(0 or 6) else 0) + (days-days//7*7)*8) + "\n")
+                    print("fail : do not have enough time unit, need " + project[5] + " but " + str(days//7*40 - ((days-5) % 7 * 8 if (days)%7==(0 or 6) else 0) + (days-days//7*7)*8))
                     break
                 while time_unit < int(project[5]):
                     select = Select(main3.find_element(By.NAME, "workP"))
@@ -230,23 +228,16 @@ def attendance(project):
                 main3.find_element(By.ID, "btnSubmit").click()
                 WebDriverWait(driver, 10).until(EC.alert_is_present())
                 driver.switch_to.alert.accept()
-                print("successfully attend   " + project[0] + "    " + str(date)+"\n")
-                
-                
+                print("successfully attend   " + project[0] + "    " + str(date))
+
+
     elif project[2]=="獎助型":
         a = np.where(scholarship_history[:,4] == project[0])
-        
-        
-        
-        
-        
         start_month = str(int(project[6].replace("-",""))//100)
         end_month = str(int(project[7].replace("-",""))//100)
         for i in range( 12*(int(end_month[0:4])-int(start_month[0:4])) + (int(end_month[4:6])-int(start_month[4:6])) + 1):
             date = int(start_month) + (int(start_month[4:6])+i-1)//12*88 + i
-            
-            if check_for_attendance2(today, date, scholarship_history[a,3], scholarship_history[a,6]):
-                
+            if check_for_attendance(today, date, scholarship_history[a,3]):
                 main2.find_element(By.ID, "node_level-2-1").click()
                 print("try to attend  " + project[0] +"    " + str(date) + "...")
                 sleep(operateTimeInterval)
@@ -259,12 +250,12 @@ def attendance(project):
                     break
                 select.select_by_visible_text(op.text)
                 WebDriverWait(main3, 10).until(EC.presence_of_element_located((By.TAG_NAME, "label")))
-                sleep(operateTimeInterval)
                 check_box_list = get_data(main3.find_elements(By.CLASS_NAME, "w2ui-odd") + main3.find_elements(By.CLASS_NAME, "w2ui-even"), "w2ui-grid-data", 4)
-                main3.find_element(By.ID, "ShowWorkDetail").find_element(By.XPATH, "//div[@title=" + str(date) + "]/../..").find_element(By.TAG_NAME, "input").click()
+                main3.find_element(By.ID, "ShowWorkDetail").find_element(By.XPATH, "//div[@title=" + str(check_box_list[(np.where(check_box_list[:,1]==str(date))),1][0,0]) + "]/../..").find_element(By.TAG_NAME, "input").click()
                 main3.find_element(By.CSS_SELECTOR, "input[type='button']").click()
-                sleep(operateTimeInterval)
-                print("successfully attend   " + project[0] + "    " + str(date)+"\n")
+                WebDriverWait(driver, 10).until(EC.alert_is_present())
+                driver.switch_to.alert.accept()
+                print("successfully attend   " + project[0] + "    " + str(date))
 
 
 
@@ -272,7 +263,6 @@ def attendance(project):
 
 
 if __name__ == '__main__':
-    # warnings.filterwarnings(action='ignore', category=DeprecationWarning)
     
     config = config()
     config.get_config()
@@ -303,7 +293,7 @@ if __name__ == '__main__':
     sleep(operateTimeInterval)
     scholarship_history = get_data((main3.find_elements(By.CLASS_NAME, "w2ui-odd") + main3.find_elements(By.CLASS_NAME, "w2ui-even")), "w2ui-grid-data")
     
-    
+
     driver.find_element(By.ID, "node_level-1-4").click()
     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "w2ui-grid-data")))
     sleep(operateTimeInterval)
