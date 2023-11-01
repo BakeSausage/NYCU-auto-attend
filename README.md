@@ -20,3 +20,9 @@ selenium
 操作間隔Operate time interval 為每次操作網頁時的間隔，輸入約0.5即可
 
 開啟schedule.ini，將有課的時段改為1
+
+# 已知問題
+
+尚未兼容mac
+
+未找到勞動型差勤
