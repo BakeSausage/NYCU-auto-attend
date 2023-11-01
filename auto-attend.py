@@ -288,18 +288,20 @@ if __name__ == '__main__':
     main2, main3 = get_main_elements()
 
 
-    driver.find_element(By.ID, "node_level-2-2").click()
+    main2.find_element(By.ID, "node_level-2-2").click()
     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "w2ui-grid-data")))
     sleep(operateTimeInterval)
     scholarship_history = get_data((main3.find_elements(By.CLASS_NAME, "w2ui-odd") + main3.find_elements(By.CLASS_NAME, "w2ui-even")), "w2ui-grid-data")
     
+    
+    try:
+        driver.find_element(By.ID, "node_level-1-4").click()
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "w2ui-grid-data")))
+        sleep(operateTimeInterval)
+        labor_history = get_data(main3.find_elements(By.CLASS_NAME, "w2ui-odd") + main3.find_elements(By.CLASS_NAME, "w2ui-even"), "w2ui-grid-data")
+    except:
+        pass
 
-    driver.find_element(By.ID, "node_level-1-4").click()
-    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "w2ui-grid-data")))
-    sleep(operateTimeInterval)
-    labor_history = get_data(main3.find_elements(By.CLASS_NAME, "w2ui-odd") + main3.find_elements(By.CLASS_NAME, "w2ui-even"), "w2ui-grid-data")
-    
-    
     ########################################################################
     
     today = str(datetime.date.today()).replace("-","")
@@ -313,5 +315,5 @@ if __name__ == '__main__':
     
     print("attend done.")
 
-    driver.close()
+    # driver.close()
     
