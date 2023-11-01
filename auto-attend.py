@@ -29,6 +29,7 @@ class config:
             try:
                 self.account = config["config"]["account"]
                 self.password = config["config"]["password"]
+                self.operateTimeInterval = config["config"]["operateTimeInterval"]
             except:
                 print("Configuration file not found, please set it up.")
                 try:
@@ -37,12 +38,11 @@ class config:
                     pass
                 self.account = input("Account:")
                 self.password = input("Password:")
-                self.operateTimeInterval = 0.5
+                self.operateTimeInterval = "0.5"
                 config.set("config", "account", self.account)
                 config.set("config", "password", self.password)
                 config.set("config", "operateTimeInterval", self.operateTimeInterval)
                 config.write(f)
-    
 
 
 def connent_to_attendence():
