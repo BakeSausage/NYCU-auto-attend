@@ -265,7 +265,6 @@ def attendance(project):
                 select.select_by_visible_text(op.text)
                 WebDriverWait(main3, 10).until(EC.presence_of_element_located((By.TAG_NAME, "label")))
                 sleep(operateTimeInterval)
-                check_box_list = get_data(main3.find_elements(By.CLASS_NAME, "w2ui-odd") + main3.find_elements(By.CLASS_NAME, "w2ui-even"), "w2ui-grid-data", 4)
                 main3.find_element(By.ID, "ShowWorkDetail").find_element(By.XPATH, "//div[@title=" + str(date) + "]/../..").find_element(By.TAG_NAME, "input").click()
                 main3.find_element(By.CSS_SELECTOR, "input[type='button']").click()
                 sleep(operateTimeInterval)
