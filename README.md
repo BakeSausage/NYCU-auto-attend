@@ -13,7 +13,7 @@ selenium
 
 # 使用教學
 
-雙擊run即可享受自動差勤的快感(.bat for window, .sh for mac)
+雙擊run即可享受自動差勤的快感
 
 首次使用會要求帳號密碼
 
@@ -22,3 +22,5 @@ selenium
 開啟schedule.ini，將有課的時段改為1
 
 # 已知問題
+
+mac研究中...
