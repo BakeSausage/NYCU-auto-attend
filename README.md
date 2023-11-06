@@ -23,4 +23,5 @@ python
 # 已知問題
 
 chromedriver尚未啟用自動更新，如果報錯請將chromedriver資料夾裡的檔案自行更換為最新版 https://googlechromelabs.github.io/chrome-for-testing/#stable
+
 mac研究中...
