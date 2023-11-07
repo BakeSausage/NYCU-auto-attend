@@ -115,20 +115,19 @@ def month_to_number(o):
 class laber_select_time:
     def __init__(self, timePicker):
         self.timePicker = main3.find_element(By.ID, timePicker)
-        self.main_ui = driver.find_element(By.CLASS_NAME, "ui-datepicker")
 
 
     def set_time(self, year_month, day, time):
         self.timePicker.click()
-        year = self.main_ui.find_element(By.CLASS_NAME, "ui-datepicker-year").text
-        month = self.main_ui.find_element(By.CLASS_NAME, "ui-datepicker-month").text
-        while int(year + month_to_number(month)) != year_month:
-            year = self.main_ui.find_element(By.CLASS_NAME, "ui-datepicker-year").text
-            month = self.main_ui.find_element(By.CLASS_NAME, "ui-datepicker-month").text
-            if int(year + month_to_number(month)) > year_month:
-                self.main_ui.find_element(By.CLASS_NAME, "ui-datepicker-prev").click()
-            elif int(year + month_to_number(month)) < year_month:
-                self.main_ui.find_element(By.CLASS_NAME, "ui-datepicker-next").click()
+        year = driver.find_element(By.CLASS_NAME, "ui-datepicker-year").text
+        month = driver.find_element(By.CLASS_NAME, "ui-datepicker-month").text
+        while int(year + month_to_number(month)) != int(year_month):
+            year = driver.find_element(By.CLASS_NAME, "ui-datepicker-year").text
+            month = driver.find_element(By.CLASS_NAME, "ui-datepicker-month").text
+            if int(year + month_to_number(month)) > int(year_month):
+                driver.find_element(By.CLASS_NAME, "ui-datepicker-prev").click()
+            elif int(year + month_to_number(month)) < int(year_month):
+                driver.find_element(By.CLASS_NAME, "ui-datepicker-next").click()
                 
         driver.find_element(By.ID, "ui-datepicker-div").find_element(By.XPATH, "//a[contains(text(),"+ str(day) +")]").click()
         self.slider = driver.find_element(By.ID, "ui-datepicker-div").find_element(By.CLASS_NAME, "ui_tpicker_hour_slider")
@@ -292,7 +291,7 @@ if __name__ == '__main__':
     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "modal-content")))
     sleep(operateTimeInterval)
     all_projects = get_data(driver.find_element(By.TAG_NAME, "tbody").find_elements(By.TAG_NAME, "tr"), "align-middle")
-    
+
     
     driver.find_element(By.ID, "showWorkLists").send_keys(Keys.ESCAPE)
     sleep(operateTimeInterval)
