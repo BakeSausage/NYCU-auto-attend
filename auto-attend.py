@@ -260,7 +260,7 @@ def attendance(project):
                 sleep(operateTimeInterval)               
                 for a in main3.find_elements(By.XPATH, "//div[@title='" + project[0] + "']/../.."):
                     a.find_element(By.CLASS_NAME, "w2ui-grid-select-check").click()
-                # main3.find_element(By.ID, "btnSubmit").click()
+                main3.find_element(By.ID, "btnSubmit").click()
                 WebDriverWait(driver, 10).until(EC.alert_is_present())
                 driver.switch_to.alert.accept()
                 print("successfully attend   " + project[0] + "    " + str(date)+"\n")
