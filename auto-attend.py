@@ -309,7 +309,7 @@ if __name__ == '__main__':
     driver = connent_to_attendence()
     
     
-    driver.get("https://pt-attendance.nctu.edu.tw/verify/userLogin.php")
+    driver.get("https://pt-attendance.nycu.edu.tw/verify/userLogin.php")
     login(config.account, config.password)
     
     
