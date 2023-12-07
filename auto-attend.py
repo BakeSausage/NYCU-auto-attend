@@ -155,7 +155,7 @@ class schedule:
                 t += int(self.schedule[i][j])
         return t
 
-def can_work(work_time_list, date_day, morning):
+def can_work(work_time_list, date_day, morning): #list of working day[[date_day,morning],...], date that can or cant work, morning of date_day
     if work_time_list==[]:
         return True
     B = [eval(i) for i in np.array(work_time_list)[:,0]]
@@ -215,10 +215,6 @@ def attendance(project):
                     date_picker_end_time = laber_select_time("datetimepicker2")
                     
                     
-                    if schedule.has_class(str(date)+str(day), morning) == True:
-                        day = day + 1 if not(morning) else day
-                        morning = not morning
-                        continue
                     if not(can_work(work_time_list, str(date)+str(day), morning)):
                         day = day + 1 if not(morning) else day
                         morning = not morning
@@ -228,24 +224,25 @@ def attendance(project):
                         if morning:
                             start_time = -20
                             end_time = 4
-                            date_picker_start_time.set_time(start_month, day, start_time)
-                            date_picker_end_time.set_time(start_month, day, end_time)
                         else:
                             start_time = 9
                             end_time = 33
-                            date_picker_start_time.set_time(start_month, day, start_time)
-                            date_picker_end_time.set_time(start_month, day, end_time)
                     else:
                         if morning:
                             start_time = -20
                             end_time = -20 + 6* (int(project[5]) - time_unit)
-                            date_picker_start_time.set_time(start_month, day, start_time)
-                            date_picker_end_time.set_time(start_month, day, end_time)
                         else:
                             start_time = 9
                             end_time = 9 + 6 * (int(project[5]) - time_unit)
-                            date_picker_start_time.set_time(start_month, day, start_time)
-                            date_picker_end_time.set_time(start_month, day, end_time)
+                    if schedule.has_class(str(date)+str(day), morning) == True:
+                        if morning:
+                            start_time = start_time - 20
+                            end_time = end_time - 20
+                        else:
+                            start_time = start_time + 33
+                            end_time = end_time + 33
+                    date_picker_start_time.set_time(start_month, day, start_time)
+                    date_picker_end_time.set_time(start_month, day, end_time)
                     main3.find_element(By.ID, "btnSubmit").click()
                     work_time_list.append([str(date)+str(day), morning])
                     print("")
@@ -257,7 +254,16 @@ def attendance(project):
                     sleep(operateTimeInterval)
                     
                 main2.find_element(By.ID, "node_level-1-2").click()
-                sleep(operateTimeInterval)               
+                sleep(operateTimeInterval)
+                
+                main3.find_element(By.ID, "custom_widget").click()
+                select = Select(driver.find_element(By.CSS_SELECTOR, "select[class='mtz-monthpicker-year']"))
+                select.select_by_visible_text(str(date//100))
+                driver.find_element(By.XPATH, "//table[@class='mtz-monthpicker']").find_element(By.CSS_SELECTOR, "td[data-month='" + str(date%100) + "']").click()
+                sleep(operateTimeInterval)
+                ##driver.send_keys(Keys.ESCAPE)##
+                sleep(operateTimeInterval)
+                
                 for a in main3.find_elements(By.XPATH, "//div[@title='" + project[0] + "']/../.."):
                     a.find_element(By.CLASS_NAME, "w2ui-grid-select-check").click()
                 main3.find_element(By.ID, "btnSubmit").click()
