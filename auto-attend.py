@@ -245,7 +245,6 @@ def attendance(project):
                     date_picker_end_time.set_time(start_month, day, end_time)
                     main3.find_element(By.ID, "btnSubmit").click()
                     work_time_list.append([str(date)+str(day), morning])
-                    print("")
                     time_unit = time_unit + 4
                     
                     day = day + 1 if not(morning) else day
@@ -255,20 +254,22 @@ def attendance(project):
                     
                 main2.find_element(By.ID, "node_level-1-2").click()
                 sleep(operateTimeInterval)
+                ###################################################3
                 
-                main3.find_element(By.ID, "custom_widget").click()
-                select = Select(driver.find_element(By.CSS_SELECTOR, "select[class='mtz-monthpicker-year']"))
-                select.select_by_visible_text(str(date//100))
-                driver.find_element(By.XPATH, "//table[@class='mtz-monthpicker']").find_element(By.CSS_SELECTOR, "td[data-month='" + str(date%100) + "']").click()
-                sleep(operateTimeInterval)
-                ##driver.send_keys(Keys.ESCAPE)##
-                sleep(operateTimeInterval)
+                # main3.find_element(By.ID, "custom_widget").click()
+                # sleep(operateTimeInterval)
+                # driver.find_element(By.CSS_SELECTOR, "td[data-month='5']").click()
                 
+
+                ####################################################
                 for a in main3.find_elements(By.XPATH, "//div[@title='" + project[0] + "']/../.."):
                     a.find_element(By.CLASS_NAME, "w2ui-grid-select-check").click()
                 main3.find_element(By.ID, "btnSubmit").click()
                 WebDriverWait(driver, 10).until(EC.alert_is_present())
                 driver.switch_to.alert.accept()
+                sleep(operateTimeInterval)
+                driver.find_element(By.CLASS_NAME, "w2ui-msg-close").click()
+                sleep(operateTimeInterval)
                 print("successfully attend   " + project[0] + "    " + str(date)+"\n")
                 
                 
