@@ -102,8 +102,6 @@ def check_for_attendance2(date_today, date_check, attendance_date, attendance_re
     return True
     
 
-
-
 class laber_select_time:
     def __init__(self, timePicker):
         self.timePicker = main3.find_element(By.ID, timePicker)
@@ -177,7 +175,6 @@ def can_work(work_time_list, date_day, morning): #list of working day[[date_day,
     
 
 def attendance(project):
-
     if project[2]=="勞動型":
         a = np.where(labor_history[:,3] == project[0])
         start_date = int(project[6].replace("-",""))
@@ -251,17 +248,14 @@ def attendance(project):
                     morning = not morning
                     
                     sleep(operateTimeInterval)
-                    
                 main2.find_element(By.ID, "node_level-1-2").click()
                 sleep(operateTimeInterval)
-                ###################################################3
-                
-                # main3.find_element(By.ID, "custom_widget").click()
-                # sleep(operateTimeInterval)
-                # driver.find_element(By.CSS_SELECTOR, "td[data-month='5']").click()
-                
-
-                ####################################################
+                main3.find_element(By.ID, "custom_widget").click()
+                A = driver.find_element(By.CSS_SELECTOR ,'div[style*="display: block;"]')
+                select = Select(A.find_element(By.CLASS_NAME, "mtz-monthpicker-year"))
+                select.select_by_visible_text(str(date//100))
+                A.find_element(By.CSS_SELECTOR, "td[data-month='" + str(date%100) +"']").click()
+                sleep(operateTimeInterval)
                 for a in main3.find_elements(By.XPATH, "//div[@title='" + project[0] + "']/../.."):
                     a.find_element(By.CLASS_NAME, "w2ui-grid-select-check").click()
                 main3.find_element(By.ID, "btnSubmit").click()
