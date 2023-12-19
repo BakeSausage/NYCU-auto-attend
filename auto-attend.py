@@ -53,7 +53,7 @@ def connent_to_attendence():
         try:
             driver = webdriver.Chrome()
         except:
-            pass
+            raise ValueError("Can't bind to chrome")
     return driver
 
 
