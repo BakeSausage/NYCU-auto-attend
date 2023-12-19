@@ -51,12 +51,9 @@ def connent_to_attendence():
         driver = webdriver.Chrome(options=options)
     except:
         try:
-            driver = webdriver.Chrome(options=options)
+            driver = webdriver.Chrome()
         except:
-            try:
-                driver = webdriver.Chrome()
-            except:
-                pass
+            pass
     return driver
 
 
