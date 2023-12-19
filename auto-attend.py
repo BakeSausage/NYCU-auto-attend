@@ -68,14 +68,6 @@ def get_main_elements():
     return main2, main3
 
 
-def get_data(elements, elements_branch_class_name, rows_number=8):
-    data=[]
-    for element in elements:
-        for a in element.find_elements(By.CLASS_NAME, elements_branch_class_name):
-            data.append(a.text)
-    return np.array(data, dtype=str).reshape(int(len(data)/rows_number), rows_number)
-
-
 def check_for_attendance(date_today, date_check, attendance_date):
     #True  -> need attendance
     #False -> already attended
@@ -188,7 +180,6 @@ def attendance(project):
                 day = start_date % 100
                 morning = True
                 time_unit = 0
-                work_time_list = []
                 
                 select = Select(main3.find_element(By.NAME, "workP"))
                 for op in select.options:
@@ -292,11 +283,21 @@ def attendance(project):
                 sleep(operateTimeInterval)
                 print("successfully attend   " + project[0] + "    " + str(date)+"\n")
 
+def get_data(elements, elements_branch_class_name, rows_number=8):
+    data=[]
+    for element in elements:
+        for a in element.find_elements(By.CLASS_NAME, elements_branch_class_name):
+            data.append(a.text)
+    return np.array(data, dtype=str).reshape(int(len(data)/rows_number), rows_number)
 
 
-
-
-
+def click_and_get_data(button_name, rows_number=8):
+    driver.find_element(By.ID, button_name).click()
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "w2ui-grid-data")))
+    sleep(operateTimeInterval)
+    data = get_data(main3.find_elements(By.CLASS_NAME, "w2ui-odd") + main3.find_elements(By.CLASS_NAME, "w2ui-even"), "w2ui-grid-data", rows_number)
+    return data
+    
 if __name__ == '__main__':
 
     config = config()
@@ -313,26 +314,28 @@ if __name__ == '__main__':
     
     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "modal-content")))
     sleep(operateTimeInterval)
+    main2, main3 = get_main_elements()
+    
+    
     all_projects = get_data(driver.find_element(By.TAG_NAME, "tbody").find_elements(By.TAG_NAME, "tr"), "align-middle")
 
     
     driver.find_element(By.ID, "showWorkLists").send_keys(Keys.ESCAPE)
     sleep(operateTimeInterval)
     
-    
-    main2, main3 = get_main_elements()
+
+    scholarship_history = click_and_get_data("node_level-2-2")
 
 
-    driver.find_element(By.ID, "node_level-2-2").click()
-    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "w2ui-grid-data")))
-    sleep(operateTimeInterval)
-    scholarship_history = get_data((main3.find_elements(By.CLASS_NAME, "w2ui-odd") + main3.find_elements(By.CLASS_NAME, "w2ui-even")), "w2ui-grid-data")
-    
     try:
-        driver.find_element(By.ID, "node_level-1-4").click()
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "w2ui-grid-data")))
-        sleep(operateTimeInterval)
-        labor_history = get_data(main3.find_elements(By.CLASS_NAME, "w2ui-odd") + main3.find_elements(By.CLASS_NAME, "w2ui-even"), "w2ui-grid-data")
+        labor_history = click_and_get_data("node_level-1-4")
+        labor_details = click_and_get_data("node_level-1-2", rows_number=9)
+        
+        work_time_list=[]
+        for labor_detail in labor_details:
+            if labor_detail[1]=="":
+                continue
+            work_time_list.append([labor_detail[5].split(" ")[0].replace("-",""), True if int(labor_detail[6].split(" ")[1].split(":")[0])<=12 else False])
     except:
         pass
     
