@@ -45,6 +45,7 @@ class config:
 
 def connent_to_attendence():
     options = Options()
+    options.add_argument("--headless--")
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
 
     try:
