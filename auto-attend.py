@@ -14,9 +14,12 @@ import configparser
 
 class config:
     def __init__(self):
-        self.account = ""
-        self.password = ""
-        self.operateTimeInterval = ""
+        # self.account = ""
+        # self.password = ""
+        # self.operateTimeInterval = ""
+        self.account = "310651027"
+        self.password = "eipi101010"
+        self.operateTimeInterval = "0.5"
         
     def get_config(self):
         config = configparser.ConfigParser()
@@ -173,7 +176,9 @@ def attendance(project):
         end_month = str(int(project[7].replace("-",""))//100)
         for i in range( 12*(int(end_month[0:4])-int(start_month[0:4])) + (int(end_month[4:6])-int(start_month[4:6])) + 1):
             date = int(start_month) + (int(start_month[4:6])+i-1)//12*88 + i
-            if check_for_attendance(today, date, labor_history[a,2]):
+            try:
+                if not check_for_attendance(today, date, labor_history[a,2]):
+                    continue
                 main2.find_element(By.ID, "node_level-1-1").click()
                 print("try to attend  " + project[0] + "    " + str(date) + "...")
                 sleep(operateTimeInterval)
@@ -191,7 +196,7 @@ def attendance(project):
                     op_text = op.text
                     break
                 days = (int(today)-int(op.text.split(" ")[1].split("~")[0].replace("-",""))+1) #default caculation only by date(dd), didnt consider project over 1 month
-                if days//7*40 - ((days-5) % 7 * 8 if (days)%7==(0 or 6) else 0) + (days-days//7*7)*8 < int(project[5]) + 4*schedule.all_class_time():
+                if days//7*40 - ((days-5) % 7 * 8 if (days)%7==(0 or 6) else 0) + (days-days//7*7)*8 < int(project[5]):
                     print("fail : do not have enough time unit, need " + project[5] + " but " + str(days//7*40 - ((days-5) % 7 * 8 if (days)%7==(0 or 6) else 0) + (days-days//7*7)*8) + "\n")
                     break
                 while time_unit < int(project[5]):
@@ -254,6 +259,8 @@ def attendance(project):
                 driver.find_element(By.CLASS_NAME, "w2ui-msg-close").click()
                 sleep(operateTimeInterval)
                 print("successfully attend   " + project[0] + "    " + str(date)+"\n")
+            except:
+                print("project: " + project[0] + " occure some problem. Please check it out.\n")
                 
                 
     elif project[2]=="獎助型":
@@ -263,9 +270,9 @@ def attendance(project):
         end_month = str(int(project[7].replace("-",""))//100)
         for i in range( 12*(int(end_month[0:4])-int(start_month[0:4])) + (int(end_month[4:6])-int(start_month[4:6])) + 1):
             date = int(start_month) + (int(start_month[4:6])+i-1)//12*88 + i
-            
-            if check_for_attendance2(today, date, scholarship_history[a,3], scholarship_history[a,6]):
-                
+            try:
+                if not check_for_attendance2(today, date, scholarship_history[a,3], scholarship_history[a,6]):
+                    continue
                 main2.find_element(By.ID, "node_level-2-1").click()
                 print("try to attend  " + project[0] +"    " + str(date) + "...")
                 sleep(operateTimeInterval)
@@ -283,6 +290,8 @@ def attendance(project):
                 main3.find_element(By.CSS_SELECTOR, "input[type='button']").click()
                 sleep(operateTimeInterval)
                 print("successfully attend   " + project[0] + "    " + str(date)+"\n")
+            except:
+                print("project: " + project[0] + " occure some problem. Please check it out.\n")
 
 def get_data(elements, elements_branch_class_name, rows_number=8):
     data=[]
