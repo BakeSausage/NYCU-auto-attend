@@ -180,7 +180,7 @@ def attendance(project):
                 if not check_for_attendance(today, date, labor_history[a,2]):
                     continue
                 main2.find_element(By.ID, "node_level-1-1").click()
-                print("try to attend  " + project[0] + "    " + str(date) + "...")
+                print("[@]try to attend  " + project[0] + "    " + str(date) + "...")
                 sleep(operateTimeInterval)
                 
                 day = start_date % 100
@@ -197,7 +197,7 @@ def attendance(project):
                     break
                 days = (int(today)-int(op.text.split(" ")[1].split("~")[0].replace("-",""))+1) #default caculation only by date(dd), didnt consider project over 1 month
                 if days//7*40 - ((days-5) % 7 * 8 if (days)%7==(0 or 6) else 0) + (days-days//7*7)*8 < int(project[5]):
-                    print("fail : do not have enough time unit, need " + project[5] + " but " + str(days//7*40 - ((days-5) % 7 * 8 if (days)%7==(0 or 6) else 0) + (days-days//7*7)*8) + "\n")
+                    print("[@]fail : do not have enough time unit, need " + project[5] + " but " + str(days//7*40 - ((days-5) % 7 * 8 if (days)%7==(0 or 6) else 0) + (days-days//7*7)*8) + "\n")
                     break
                 while time_unit < int(project[5]):
                     select = Select(main3.find_element(By.NAME, "workP"))
@@ -260,7 +260,7 @@ def attendance(project):
                 sleep(operateTimeInterval)
                 print("successfully attend   " + project[0] + "    " + str(date)+"\n")
             except:
-                print("project: " + project[0] + " occure some problem. Please check it out.\n")
+                print("[@]project: " + project[0] + " occure some problem. Please check it out.\n")
                 
                 
     elif project[2]=="獎助型":
@@ -274,7 +274,7 @@ def attendance(project):
                 if not check_for_attendance2(today, date, scholarship_history[a,3], scholarship_history[a,6]):
                     continue
                 main2.find_element(By.ID, "node_level-2-1").click()
-                print("try to attend  " + project[0] +"    " + str(date) + "...")
+                print("[@]try to attend  " + project[0] +"    " + str(date) + "...")
                 sleep(operateTimeInterval)
                 select = Select(main3.find_element(By.NAME, "workP"))
                 for op in select.options:
@@ -289,9 +289,9 @@ def attendance(project):
                 main3.find_element(By.ID, "ShowWorkDetail").find_element(By.XPATH, "//div[@title=" + str(date) + "]/../..").find_element(By.TAG_NAME, "input").click()
                 main3.find_element(By.CSS_SELECTOR, "input[type='button']").click()
                 sleep(operateTimeInterval)
-                print("successfully attend   " + project[0] + "    " + str(date)+"\n")
+                print("[@]successfully attend   " + project[0] + "    " + str(date)+"\n")
             except:
-                print("project: " + project[0] + " occure some problem. Please check it out.\n")
+                print("[@]project: " + project[0] + " occure some problem. Please check it out.\n")
 
 def get_data(elements, elements_branch_class_name, rows_number=8):
     data=[]
