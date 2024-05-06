@@ -263,35 +263,38 @@ def attendance(project):
                 print("[@]project: " + project[0] + " occure some problem. Please check it out.\n")
                 
                 
-    elif project[2]=="獎助型":
-        a = np.where(scholarship_history[:,4] == project[0])
+    # elif project[2]=="獎助型":
+    #     a = np.where(scholarship_history[:,4] == project[0])
         
-        start_month = str(int(project[6].replace("-",""))//100)
-        end_month = str(int(project[7].replace("-",""))//100)
-        for i in range( 12*(int(end_month[0:4])-int(start_month[0:4])) + (int(end_month[4:6])-int(start_month[4:6])) + 1):
-            date = int(start_month) + (int(start_month[4:6])+i-1)//12*88 + i
-            try:
-                if not check_for_attendance2(today, date, scholarship_history[a,3], scholarship_history[a,6]):
-                    continue
-                main2.find_element(By.ID, "node_level-2-1").click()
-                print("[@]try to attend  " + project[0] +"    " + str(date) + "...")
-                sleep(operateTimeInterval)
-                select = Select(main3.find_element(By.NAME, "workP"))
-                for op in select.options:
-                    if op.text == "":
-                        continue
-                    if ((int(op.text.split(" ")[1].split("-")[0])-date) * (int(op.text.split(" ")[1].split("-")[1])-date)) > 0 or (op.text.split(":")[0] != project[0]):
-                        continue
-                    break
-                select.select_by_visible_text(op.text)
-                WebDriverWait(main3, 10).until(EC.presence_of_element_located((By.TAG_NAME, "label")))
-                sleep(operateTimeInterval)
-                main3.find_element(By.ID, "ShowWorkDetail").find_element(By.XPATH, "//div[@title=" + str(date) + "]/../..").find_element(By.TAG_NAME, "input").click()
-                main3.find_element(By.CSS_SELECTOR, "input[type='button']").click()
-                sleep(operateTimeInterval)
-                print("[@]successfully attend   " + project[0] + "    " + str(date)+"\n")
-            except:
-                print("[@]project: " + project[0] + " occure some problem. Please check it out.\n")
+    #     start_month = str(int(project[6].replace("-",""))//100)
+    #     end_month = str(int(project[7].replace("-",""))//100)
+    #     for i in range( 12*(int(end_month[0:4])-int(start_month[0:4])) + (int(end_month[4:6])-int(start_month[4:6])) + 1):
+    #         date = int(start_month) + (int(start_month[4:6])+i-1)//12*88 + i
+    #         try:
+    #             if not check_for_attendance2(today, date, scholarship_history[a,3], scholarship_history[a,6]):
+    #                 continue
+    #             main2.find_element(By.ID, "node_level-2-1").click()
+    #             print("[@]try to attend  " + project[0] +"    " + str(date) + "...")
+    #             sleep(operateTimeInterval)
+    #             select = Select(main3.find_element(By.NAME, "workP"))
+    #             for op in select.options:
+    #                 if op.text == "":
+    #                     continue
+    #                 if ((int(op.text.split(" ")[1].split("-")[0])-date) * (int(op.text.split(" ")[1].split("-")[1])-date)) > 0 or (op.text.split(":")[0] != project[0]):
+    #                     continue
+    #                 break
+    #             select.select_by_visible_text(op.text)
+    #             WebDriverWait(main3, 10).until(EC.presence_of_element_located((By.TAG_NAME, "label")))
+    #             sleep(operateTimeInterval)
+    #             main3.find_element(By.ID, "ShowWorkDetail").find_element(By.XPATH, "//div[@title=" + str(date) + "]/../..").find_element(By.TAG_NAME, "input").click()
+    #             main3.find_element(By.CSS_SELECTOR, "input[type='button']").click()
+    #             sleep(operateTimeInterval)
+    #             print("[@]successfully attend   " + project[0] + "    " + str(date)+"\n")
+    #         except:
+    #             print("[@]project: " + project[0] + " occure some problem. Please check it out.\n")
+
+    else:
+        print("occur some error.")
 
 def get_data(elements, elements_branch_class_name, rows_number=8):
     data=[]
@@ -334,7 +337,7 @@ if __name__ == '__main__':
     sleep(operateTimeInterval)
     
 
-    scholarship_history = click_and_get_data("node_level-2-2")
+    # scholarship_history = click_and_get_data("node_level-2-2")
 
 
     try:
