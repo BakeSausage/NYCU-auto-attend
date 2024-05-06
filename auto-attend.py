@@ -294,7 +294,7 @@ def attendance(project):
     #             print("[@]project: " + project[0] + " occure some problem. Please check it out.\n")
 
     else:
-        print("occur some error.")
+        pass
 
 def get_data(elements, elements_branch_class_name, rows_number=8):
     data=[]
