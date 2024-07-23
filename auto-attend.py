@@ -235,7 +235,7 @@ def attendance(project):
                     date_picker_start_time.set_time(start_month, day, start_time)
                     date_picker_end_time.set_time(start_month, day, end_time)
                     main3.find_element(By.ID, "btnSubmit").click()
-                    work_time_list.append([str(date)+str(day), morning])
+                    work_time_list.append([str(date)+str(day).zfill(2), morning])
                     time_unit = time_unit + 4
                     
                     day = day + 1 if not(morning) else day
